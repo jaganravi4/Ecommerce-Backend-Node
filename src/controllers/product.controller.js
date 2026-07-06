@@ -8,13 +8,35 @@ class ProductController {
         this.productService = new ProductService();
     }
 
+    get = async (req, res) => {
+        try{
+            const response = await this.productService.get(req.params.id);
+            return res.status(StatusCodes.OK).json({
+                success: true,
+                message: 'Successfully fetched the product',
+                data: response,
+                error: {},
+            });
+        }catch(error){
+            console.log(error);
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
+                {
+                    success: false,
+                    message: 'Not able to fetch the product',
+                    data: {},
+                    error: error,
+                }
+            )
+        }
+    }
+
     getAll = async (req, res) => {
         try{
             const response = await this.productService.getAll();
             return res.status(StatusCodes.OK).json(
                 {
                     success: true,
-                    message: "Successfully fetched all the products",
+                    message: "Successfully fetched all products",
                     error: {},
                     data: response,
                 }
@@ -25,7 +47,7 @@ class ProductController {
                 {
                     data: {},
                     success: false,
-                    message: "Something went wrong",
+                    message: "Not able to fetch all products",
                     error
                 }
             );
