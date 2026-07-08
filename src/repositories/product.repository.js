@@ -1,26 +1,10 @@
-const axios = require('axios');
-const {FAKE_STORE_URL} = require("../config/server.config");
+const BaseRepository = require('./base.repository');
+const {Product} = require('../models/index');
 
-class ProductRepository {
+class ProductRepository extends BaseRepository {
 
-    async get(id){
-        try{
-            const response = await axios.get(`${FAKE_STORE_URL}/products/${id}`);
-            return response.data;
-        }catch(error){
-            console.log(error);
-            throw error;
-        }
-    }
-
-    async getAll() {
-        try{
-            const response = await axios.get(`${FAKE_STORE_URL}/products`);
-            return response.data;
-        }catch(error){
-            console.log(error);
-            throw error;
-        }
+    constructor() {
+        super(Product);
     }
 }
 

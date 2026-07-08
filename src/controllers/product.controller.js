@@ -1,6 +1,7 @@
-
 const {StatusCodes} = require("http-status-codes");
+
 const {ProductService}= require("../services/index.js");
+const {sendSuccess, sendError} = require('../utils/response');
 
 class ProductController {
 
@@ -8,49 +9,53 @@ class ProductController {
         this.productService = new ProductService();
     }
 
+    create = async (req, res) => {
+        try{
+            const response = await this.productService.create(req.body);
+            sendSuccess(res, StatusCodes.CREATED, response, 'created', 'product');
+        }catch(error){
+            console.log(error);
+            sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error, 'create', 'product');
+        }
+    }
+
     get = async (req, res) => {
         try{
             const response = await this.productService.get(req.params.id);
-            return res.status(StatusCodes.OK).json({
-                success: true,
-                message: 'Successfully fetched the product',
-                data: response,
-                error: {},
-            });
+            sendSuccess(res, StatusCodes.OK, response, 'fetched', 'product');
         }catch(error){
             console.log(error);
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
-                {
-                    success: false,
-                    message: 'Not able to fetch the product',
-                    data: {},
-                    error: error,
-                }
-            )
+            sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error, 'fetch', 'product');
         }
     }
 
     getAll = async (req, res) => {
         try{
             const response = await this.productService.getAll();
-            return res.status(StatusCodes.OK).json(
-                {
-                    success: true,
-                    message: "Successfully fetched all products",
-                    error: {},
-                    data: response,
-                }
-            );
+            sendSuccess(res, StatusCodes.OK, response, 'fetched', 'products', true);
         }catch(error){
             console.log(error);
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
-                {
-                    data: {},
-                    success: false,
-                    message: "Not able to fetch all products",
-                    error
-                }
-            );
+            sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error, 'fetch', 'products');
+        }
+    }
+
+    update = async (req, res) => {
+        try{
+            const response = await this.productService.update(req.params.id, req.body);
+            sendSuccess(res, StatusCodes.OK, response, 'updated', 'product');
+        }catch(error){
+            console.log(error);
+            sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error, 'update', 'product');
+        }
+    }
+
+    delete = async (req, res) => {
+        try{
+            const response = await this.productService.delete(req.params.id);
+            sendSuccess(res, StatusCodes.OK, response, 'deleted', 'product');
+        }catch(error){
+            console.log(error);
+            sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error, 'delete', 'product');
         }
     }
 }

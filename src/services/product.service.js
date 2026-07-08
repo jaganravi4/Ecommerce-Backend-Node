@@ -1,27 +1,11 @@
 const {ProductRepository} = require('../repositories/index');
+const BaseService = require('./base.service');
 
-class ProductService {
+const productRepository = new ProductRepository();
 
+class ProductService extends BaseService {
     constructor() {
-        this.productRepository = new ProductRepository();
-    }
-
-    async get(id){
-        try{
-            return await this.productRepository.get(id);
-        }catch(error){
-            console.log(error);
-            throw error;
-        }
-    }
-
-    async getAll(){
-        try{
-            return await this.productRepository.getAll();
-        }catch (error){
-            console.log(error);
-            throw error;
-        }
+        super(productRepository);
     }
 }
 
